@@ -4,4 +4,4 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-shamir= {path = "libraries/shamir"}
+shamir = "2.0.0"
