@@ -1,7 +1,8 @@
 [package]
-name = "shamir_SS"
+name = "shamir_ss"
 version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-shamir = "2.0.0"
+sharks = "0.5.0"
+rand = "0.9.0"

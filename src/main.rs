@@ -1,13 +1,26 @@
-use shamir::SecretData;
+use sharks::{ Sharks, Share };
+use rand;
+
 
 fn main() {
-    let secret_data = SecretData::with_secret(&"Hello World!"[..], 3);
 
-    let share1 = secret_data.get_share(1).unwrap();
-    let share2 = secret_data.get_share(2).unwrap();
-    let share3 = secret_data.get_share(3).unwrap();
-    println!("Used keys:\n1:{:?}\n2:{:?}\n3:{:?}", share1, share2, share3);
-    let recovered = SecretData::recover_secret(3, vec![share1, share2, share3]).unwrap();
+    // Set a minimum threshold of 10 shares
+    let threshold = 10;
+    let sharks = Sharks(threshold);
+    println!("Created Sharks instance with threshold {}", threshold);
 
-    println!("Recovered {}", recovered);
+    // Obtain an iterator over the shares for secret [1, 2, 3, 4]
+    let secret: [u8; 16] = rand::random();
+    let dealer = sharks.dealer(&secret);
+    println!("Created dealer for secret {:?}", secret);
+
+    // Get 10 shares
+    let shares: Vec<Share> = dealer.take(threshold as usize).collect();
+    // Recover the original secret!
+    let recovered_secret = sharks.recover(shares.as_slice()).unwrap();
+    println!("Recovered secret: {:?}", recovered_secret);
+
+    assert_eq!(recovered_secret, secret);
+    println!("Secret matches original!");
+
 }
